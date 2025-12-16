@@ -1,4 +1,4 @@
-#include <SDL3/SDL.h>
+#include "libs/SDL3/SDL.h"
 #include <imgui.h>
 #include <imgui_impl_sdl3.h>
 #include <imgui_impl_sdlrenderer3.h>
@@ -71,11 +71,6 @@ int main(int argc, char* argv[]) {
  ImGui::Text( "Bienvenue dans ImGui !" );
  ImGui::Separator();
 
-TEUGUIA TADJUIDJE RODOLF SÉDÉRIS
-© 2025 Rihen — Tous droits réservés
-✦ Page 1 3 / 23 ✦
-rihen.universe@gmail.com • teuguiasederis@gmail.com CEO – RIHEN
-(+ 237) 693-761 -773 2025
  // Bouton
  if (ImGui::Button( "Clique-moi !")) {
  counter++;

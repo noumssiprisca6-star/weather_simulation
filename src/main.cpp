@@ -1,10 +1,14 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <iostream>
+// main.cpp
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 #include <imgui/imgui.h>
 #include <imgui/backends/imgui_impl_sdl3.h>
 #include <imgui/backends/imgui_impl_sdlrenderer3.h>
 #include <windows.h>
+
 
 int SDL_main(int argc, char* argv[]) {
     SetConsoleCP(CP_UTF8);
@@ -43,6 +47,7 @@ int SDL_main(int argc, char* argv[]) {
     float slider_value = 0.5f;
     int counter;
     char text_buffer[256] = "Écris quelque chose ici !";
+    Meteo meteo = Meteo::SOLEIL;
 
     //boucle de jeu
     bool running = true;
@@ -97,7 +102,8 @@ int SDL_main(int argc, char* argv[]) {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-
-    std::cout << "Good bye nigga!" << std::endl;
+  
+    
+    
     return 0;
 }
