@@ -1,30 +1,17 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <iostream>
-#include "../include/meteo.h"
-#include "../include/ui.h"
-#include "../include/renderer.h"
-
-// main.cpp
-#define STB_IMAGE_IMPLEMENTATION
-#include "../libs/stb/stb_image.h"
 #include <imgui.h>
 #include <imgui_impl_sdl3.h>
-#include "../libs/imgui/backends/imgui_impl_sdlrenderer3.h"
-#include <windows.h>
-
+#include <imgui_impl_sdlrenderer3.h>
 
 int SDL_main(int argc, char* argv[]) {
-    SetConsoleCP(CP_UTF8);
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr <<"Erreur SDL_Init: " << SDL_GetError() << std::endl;
     }
 
     std::cout << "SDL3 initialisé avec succès !!" << std::endl;
 
-
-
-   
     SDL_Window* window = SDL_CreateWindow("Ma premiere fenetre sDL", 800, 600, SDL_WINDOW_RESIZABLE);
     if (!window) {
         std::cerr << "Erreur de creation fenêtre: " << std::endl;
@@ -52,9 +39,8 @@ int SDL_main(int argc, char* argv[]) {
     bool show_custom_window = true;
     float clear_color[4] = {0.1f, 0.1f, 0.15f, 1.0f};
     float slider_value = 0.5f;
-    int counter;
+    int counter = 0;
     char text_buffer[256] = "Écris quelque chose ici !";
-    Meteo meteo = Meteo::Soleil;
 
     //boucle de jeu
     bool running = true;
@@ -62,14 +48,10 @@ int SDL_main(int argc, char* argv[]) {
 
     while (running) {
         while (SDL_PollEvent(&event)) {
+            ImGui_ImplSDL3_ProcessEvent(&event);
             if (event.type == SDL_EVENT_QUIT) {
                 running = false;
             }
-        
-        DrawUI(meteo);
-        DrawScene(renderer, meteo);
-        }
-
         }
 
         ImGui_ImplSDLRenderer3_NewFrame();
@@ -105,7 +87,7 @@ int SDL_main(int argc, char* argv[]) {
         //dessin de ImGui
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(),renderer);
         SDL_RenderPresent(renderer);
-    
+    }
 
     ImGui_ImplSDLRenderer3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
@@ -115,7 +97,6 @@ int SDL_main(int argc, char* argv[]) {
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-    
-    
+    std::cout << "Good bye nigga!" << std::endl;
     return 0;
 }

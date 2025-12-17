@@ -1,7 +1,1 @@
 #include"../include/meteo.h"
-
-int main(){
-    
-    
-
-}
