@@ -1,19 +1,24 @@
 #pragma once 
-
-#include<iostream>
 #ifndef METEO_H
 #define METEO_H
-enum  class Meteo{
-    Soleil ,
-    Nuageux ,
-    Pluie ,
-    Orage , 
-    Neige
-};
+#include<vector>
+#include<iostream>
 
-const char*MeteoToString(Meteo meteo);
-bool IsSunny(Meteo meteo);
-bool iscloudy(Meteo meteo);
-bool israiny(Meteo meteo);
-bool isStormy(Meteo meteo);
+
+enum class Meteo {
+    Soleil,
+    Pluie,
+    Nuageux,
+    Neige,
+    Orage
+};
+ 
+/**
+ * la procedure UpdateMeteo permet de mettre à jour les animation 
+ * DrawMeteo permet de dessiner la meteo
+ * SetMeteo permet de changer la meteo
+ */
+void UpdateMeteo(float deltaTime); 
+void DrawMeteo();
+void SetMeteo(Meteo type);
 #endif

@@ -5,21 +5,24 @@
 #include <SDL3/SDL.h>
 #include "meteo.h"
 #include<iostream>
+#include<vector>
 
-SDL_Texture* LoadTexture(const char* path, SDL_Renderer* renderer);
-void DrawScene(SDL_Renderer* renderer, Meteo meteo);
-// pour le ciel
-
-
-void InitRenderer(SDL_Renderer* renderer);
-void CleanupRenderer();
-
-void DrawSun(SDL_Renderer* renderer);
-void DrawClouds(SDL_Renderer* renderer);
-void DrawRain(SDL_Renderer* renderer);
-void DrawStorm(SDL_Renderer* renderer);
-
-void DrawScene(SDL_Renderer* renderer, Meteo meteo);
+extern SDL_Renderer* gRenderer;
+bool initRenderer(SDL_Window* window);
+void cleanupRenderer();
+//pour les dessin
+void DrawSoleil(int x , int y , int radius );
+void DrawNuages(float x , float y );
+void DrawPluie(float intensity , //quantite de pluie 
+    float wind,// le vent horizontal
+    float deltaTime //fluidite 
+);
+void DrawNeige(float density ,//nombre de flocons 
+    float wind ,// derive laterale 
+    float deltaTime );
+void DrawOrage(float frequency , // la frequence  des eclairs
+    float deltaTime );
+void DrawScene(SDL_Renderer* renderer);
 
 #endif
 

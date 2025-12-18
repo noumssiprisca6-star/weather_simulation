@@ -10,11 +10,12 @@
 #include "../libs/stb/stb_image.h"
 #include <imgui.h>
 #include <imgui_impl_sdl3.h>
-#include "../libs/imgui/backends/imgui_impl_sdlrenderer3.h"
+#include <imgui_impl_sdlrenderer3.h>
 #include <windows.h>
+#include<cstdlib>
 
-
-int SDL_main(int argc, char* argv[]) {
+  
+  int SDL_main(int argc, char* argv[]) {
     SetConsoleCP(CP_UTF8);
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr <<"Erreur SDL_Init: " << SDL_GetError() << std::endl;
@@ -22,10 +23,7 @@ int SDL_main(int argc, char* argv[]) {
 
     std::cout << "SDL3 initialisé avec succès !!" << std::endl;
 
-
-
-   
-    SDL_Window* window = SDL_CreateWindow("Ma premiere fenetre sDL", 800, 600, SDL_WINDOW_RESIZABLE);
+    SDL_Window* window = SDL_CreateWindow("Meteo VIsuelle", 800, 600, SDL_WINDOW_RESIZABLE);
     if (!window) {
         std::cerr << "Erreur de creation fenêtre: " << std::endl;
         SDL_Quit();
@@ -54,7 +52,6 @@ int SDL_main(int argc, char* argv[]) {
     float slider_value = 0.5f;
     int counter;
     char text_buffer[256] = "Écris quelque chose ici !";
-    Meteo meteo = Meteo::Soleil;
 
     //boucle de jeu
     bool running = true;
@@ -65,13 +62,31 @@ int SDL_main(int argc, char* argv[]) {
             if (event.type == SDL_EVENT_QUIT) {
                 running = false;
             }
-        
-        DrawUI(meteo);
-        DrawScene(renderer, meteo);
         }
+ //  Fond ciel
+        SDL_SetRenderDrawColor(renderer, 135, 206, 235, 255);
+        SDL_RenderClear(renderer);
 
-        }
+        // METEO
+        DrawScene(renderer);
 
+        //  IMGUI
+        ImGui_ImplSDLRenderer3_NewFrame();
+        ImGui_ImplSDL3_NewFrame();
+        ImGui::NewFrame();
+    
+        ImGui::Begin("Controle Meteo");
+        if (ImGui::Button("Soleil"))   SetMeteo(Meteo::Soleil);
+        if (ImGui::Button("Nuageux")) SetMeteo(Meteo::Nuageux);
+        if (ImGui::Button("Pluie"))   SetMeteo(Meteo::Pluie);
+        if (ImGui::Button("Neige"))   SetMeteo(Meteo::Neige);
+        if (ImGui::Button("Orage"))   SetMeteo(Meteo::Orage);
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
+
+        SDL_RenderPresent(renderer);
         ImGui_ImplSDLRenderer3_NewFrame();
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
@@ -80,7 +95,7 @@ int SDL_main(int argc, char* argv[]) {
         }
 
         if(show_custom_window) {
-            ImGui::Begin(" Ma fenêtre magique ✨", &show_custom_window);
+            ImGui::Begin(" Meteo Visuelle", &show_custom_window);
             ImGui::Text("Bienvenue dans ImGui !");
             ImGui::Separator();
             if (ImGui::Button("Clique-moi mon petit !")) {
@@ -105,7 +120,7 @@ int SDL_main(int argc, char* argv[]) {
         //dessin de ImGui
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(),renderer);
         SDL_RenderPresent(renderer);
-    
+    }
 
     ImGui_ImplSDLRenderer3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
@@ -115,7 +130,7 @@ int SDL_main(int argc, char* argv[]) {
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-    
-    
+    std::cout << "Good bye " << std::endl;
     return 0;
 }
+

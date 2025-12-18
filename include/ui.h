@@ -1,3 +1,4 @@
 #include"../include/meteo.h"
-void DrawUI(Meteo& weat);
-const char* MeteoToString(Meteo m );
+void SetPress(float& intensity,float& density, float& wind, float& frequency);
+
+
