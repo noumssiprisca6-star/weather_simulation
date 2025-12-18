@@ -12,7 +12,6 @@ enum class Meteo {
     Neige,
     Orage
 };
- 
 /**
  * la procedure UpdateMeteo permet de mettre à jour les animation 
  * DrawMeteo permet de dessiner la meteo
@@ -21,4 +20,5 @@ enum class Meteo {
 void UpdateMeteo(float deltaTime); 
 void DrawMeteo();
 void SetMeteo(Meteo type);
+void DrawUI(Meteo& meteo);
 #endif

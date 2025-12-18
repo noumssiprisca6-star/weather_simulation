@@ -7,21 +7,15 @@
 #include<iostream>
 #include<vector>
 
-extern SDL_Renderer* gRenderer;
+extern SDL_Renderer* renderer;
 bool initRenderer(SDL_Window* window);
 void cleanupRenderer();
 //pour les dessin
-void DrawSoleil(int x , int y , int radius );
-void DrawNuages(float x , float y );
-void DrawPluie(float intensity , //quantite de pluie 
-    float wind,// le vent horizontal
-    float deltaTime //fluidite 
-);
-void DrawNeige(float density ,//nombre de flocons 
-    float wind ,// derive laterale 
-    float deltaTime );
-void DrawOrage(float frequency , // la frequence  des eclairs
-    float deltaTime );
+void DrawSoleil( SDL_Renderer* renderer);
+void DrawNuages(SDL_Renderer* renderer );
+void DrawPluie(SDL_Renderer* renderer);
+void DrawNeige(SDL_Renderer* renderer);
+void DrawOrage(SDL_Renderer* renderer );
 void DrawScene(SDL_Renderer* renderer);
 
 #endif

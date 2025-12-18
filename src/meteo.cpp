@@ -14,20 +14,20 @@ cloudX = -200 ;
 }
 void DrawMeteo (){
     if (currentMeteo == Meteo::Soleil){
-        DrawSoleil(700 , 100 , 50);
+        DrawSoleil(renderer);
         if ( currentMeteo == Meteo::Nuageux || currentMeteo == Meteo::Pluie || currentMeteo == Meteo::Orage){
-            DrawNuages(cloudX , 120);
+            DrawNuages(renderer);
 
         }
         if (currentMeteo == Meteo::Pluie || currentMeteo == Meteo::Orage){
-            DrawPluie(1.0f ,30.0f, 0.016f);
+            DrawPluie(renderer);
     
         }
         if (currentMeteo == Meteo::Orage){
-            DrawOrage(0.8f , 0.016f);
+            DrawOrage(renderer);
         }
           if (currentMeteo == Meteo::Neige){
-            DrawNeige(1.5f , 40.0f , 0.016f);
+            DrawNeige(renderer);
           }
     }
 }

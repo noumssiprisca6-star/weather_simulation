@@ -16,6 +16,7 @@
 
   
   int SDL_main(int argc, char* argv[]) {
+    bool drawsun = false;
     SetConsoleCP(CP_UTF8);
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr <<"Erreur SDL_Init: " << SDL_GetError() << std::endl;
@@ -52,6 +53,7 @@
     float slider_value = 0.5f;
     int counter;
     char text_buffer[256] = "Écris quelque chose ici !";
+    Meteo meteo;
 
     //boucle de jeu
     bool running = true;
@@ -59,69 +61,93 @@
 
     while (running) {
         while (SDL_PollEvent(&event)) {
+            ImGui_ImplSDL3_ProcessEvent(&event);
+        
+
             if (event.type == SDL_EVENT_QUIT) {
                 running = false;
             }
         }
  //  Fond ciel
-        SDL_SetRenderDrawColor(renderer, 135, 206, 235, 255);
-        SDL_RenderClear(renderer);
+        
 
         // METEO
-        DrawScene(renderer);
+    
 
         //  IMGUI
         ImGui_ImplSDLRenderer3_NewFrame();
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
-    
+        
         ImGui::Begin("Controle Meteo");
-        if (ImGui::Button("Soleil"))   SetMeteo(Meteo::Soleil);
-        if (ImGui::Button("Nuageux")) SetMeteo(Meteo::Nuageux);
-        if (ImGui::Button("Pluie"))   SetMeteo(Meteo::Pluie);
-        if (ImGui::Button("Neige"))   SetMeteo(Meteo::Neige);
-        if (ImGui::Button("Orage"))   SetMeteo(Meteo::Orage);
+        if (ImGui::Button("Soleil"))  {
+            SetMeteo( Meteo::Soleil);
+            drawsun = true;
+            
+            
+        }
+        if (ImGui::Button("Nuageux")){
+          SetMeteo(Meteo::Nuageux);
+          DrawNuages(renderer);
+          SDL_RenderClear(renderer);
+        }
+        if (ImGui::Button("Pluie"))  {
+        SetMeteo (Meteo::Pluie);
+        DrawPluie(renderer);
+        SDL_RenderClear(renderer);
+        }
+          
+        if (ImGui::Button("Neige"))  {
+        SetMeteo(Meteo::Neige);
+        DrawNeige(renderer);
+        SDL_RenderClear(renderer);
+        } 
+        if (ImGui::Button("Orage")) {
+              SetMeteo( Meteo::Orage);
+              DrawOrage(renderer);
+              SDL_RenderClear(renderer);
+        }
+  
+    
+         
+        switch (meteo)
+        {
+        case Meteo::Soleil:
+        std::cout<<"la meteo actuelle est le soleil";
+        DrawSoleil(renderer);
+        break;
+        case Meteo::Pluie:
+        DrawPluie(renderer);
+        break;
+        case Meteo::Orage:
+        DrawOrage(renderer);
+        break;
+        case Meteo::Neige:
+        DrawNeige(renderer);
+        break;
+        case Meteo::Nuageux:
+        DrawNuages(renderer);
+        default:
+            break;
+        }
+      
+        ImGui::Separator();
         ImGui::End();
-
         ImGui::Render();
+        
+        
+        SDL_SetRenderDrawColor(renderer, 135, 206, 235, 255);
+        SDL_RenderClear(renderer);
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
-
         SDL_RenderPresent(renderer);
-        ImGui_ImplSDLRenderer3_NewFrame();
-        ImGui_ImplSDL3_NewFrame();
-        ImGui::NewFrame();
-        if (show_custom_window) {
-            ImGui::ShowDemoWindow(&show_demo_window);
-        }
-
-        if(show_custom_window) {
-            ImGui::Begin(" Meteo Visuelle", &show_custom_window);
-            ImGui::Text("Bienvenue dans ImGui !");
-            ImGui::Separator();
-            if (ImGui::Button("Clique-moi mon petit !")) {
-                counter++;
-            }
-            ImGui::SameLine();
-            ImGui::Text("compteur = %d", counter);
-            //slider
-            ImGui::SliderFloat("valeur", &slider_value, 0.0f, 1.0f);
-            //champ de texte
-            ImGui::InputText("texte", text_buffer, IM_ARRAYSIZE(text_buffer));
-            //selecteur de couleur
-            ImGui::Text("Application moyenne %.3f md/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
-            ImGui::End();
-        }
-        ImGui::Render();
+        
+    
 
         //effacage de l'ecran avec la couleur choisie
-        SDL_SetRenderDrawColor(renderer,(Uint8)(clear_color[0]) * 255, (Uint8)(clear_color[1]) * 255,
-                                (Uint8)(clear_color[2]) * 255, (Uint8)(clear_color[3] * 255));
-        SDL_RenderClear(renderer);
+        
         //dessin de ImGui
-        ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(),renderer);
-        SDL_RenderPresent(renderer);
     }
-
+    
     ImGui_ImplSDLRenderer3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
     ImGui::DestroyContext();
@@ -132,5 +158,6 @@
 
     std::cout << "Good bye " << std::endl;
     return 0;
-}
 
+
+}
