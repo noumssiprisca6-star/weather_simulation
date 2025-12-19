@@ -8,7 +8,7 @@ SDL_Renderer* renderer = nullptr;
 //elelment
 struct element {
     float x , y;
-    float speed ;
+
 };
 static std::vector<element> rainDrops ;
 static std::vector<element> snowFlakes;
@@ -20,41 +20,44 @@ bool initRenderer(SDL_Window* window){
 void cleanupRenderer(){
     SDL_DestroyRenderer(renderer);
 }
-//pour dessiner le soleil
-void DrawSoleil(SDL_Renderer* renderer){
-    int cx = 400; 
-    int cy = 150;
-    int r =50 ;
-    SDL_SetRenderDrawColor(renderer , 255, 212, 0 ,255);
-    for (int i = 0; i < 360 ; i++){
-        float rad =i * M_PI / 180.0f ;
-        int x = cx + cos(rad) * r;
-        int y = cy + sin(rad) * r ;
-        SDL_RenderPoint(renderer , x , y );
-             
+//pour dessiner un cercle plein 
+void DrawFilledCircle(SDL_Renderer* renderer , int cx , int cy , int radius){
+    for (int i = - radius ; i <= radius ; i++){
+        for(int a = - radius ; a <= radius ; a ++){
+            if (i*i + a*a <= radius*radius){
+           SDL_RenderPoint(renderer ,cx + i , cy + a);
             }
         }
-   
-//pour dessiner les nuages 
-void DrawNuages(SDL_Renderer* renderer){
-    SDL_SetRenderDrawColor(renderer ,200,200 ,200 ,255);
-    //pour un nuage il faut en faites créer trois cercles superposés 
-    int basex = 200;
-    int basey = 120;
-    for (int i =0 ; i<3 ; i++){
-        int cx = basex +  i * 60;
-        int cy = basey  + (i % 2) * 10 ;
-        int r  = 30 ;
-    
-            for (int a = 0 ; a < 360; a++){
-                float rad = a * M_PI/180.0f;
-                int x = cx + cos(rad) * r ;
-                int y = cy + sin(rad)  * r ;
-               SDL_RenderPoint(renderer , x ,y);
-               }
-            }
+    }
+}
 
-        }
+    //SOLEIL
+    void DrawSoleil(SDL_Renderer* renderer){
+        SDL_SetRenderDrawColor(renderer , 255 ,215 ,0,255) ;//couleur jaune
+        DrawFilledCircle(renderer ,650 ,120 ,50);
+    }
+
+//NUAGE
+struct Cloud {
+    float x, y;
+    float speed;
+};
+
+void DrawNuageux(SDL_Renderer* renderer, int x, int y)
+{
+    SDL_SetRenderDrawColor(renderer, 240, 240, 240, 255);
+    DrawFilledCircle(renderer, x, y, 25);
+    DrawFilledCircle(renderer, x + 30, y - 10, 30);
+    DrawFilledCircle(renderer, x + 60, y, 25);
+    DrawFilledCircle(renderer, x + 30, y + 10, 28);
+}
+
+/* Nuages */
+    std::vector<Cloud> clouds = {
+        {100, 120, 0.3f},
+        {300, 180, 0.4f},
+        {500, 150, 0.2f}
+    };
 
 
 //pour dessiner la pluie 
@@ -99,7 +102,7 @@ void DrawNeige(SDL_Renderer* renderer){
         switch (meteo)
         {
         case Meteo::Soleil:
-        DrawSoleil(renderer);
+        DrawSoleil(renderer );
         break;
         case Meteo::Pluie:
         DrawPluie(renderer);
@@ -111,7 +114,7 @@ void DrawNeige(SDL_Renderer* renderer){
         DrawNeige(renderer);
         break;
         case Meteo::Nuageux:
-        DrawNuages(renderer) ;
+        DrawNuageux(renderer) ;
         default:
             break;
         }

@@ -16,7 +16,7 @@ void DrawMeteo (){
     if (currentMeteo == Meteo::Soleil){
         DrawSoleil(renderer);
         if ( currentMeteo == Meteo::Nuageux || currentMeteo == Meteo::Pluie || currentMeteo == Meteo::Orage){
-            DrawNuages(renderer);
+            DrawNuageux(renderer);
 
         }
         if (currentMeteo == Meteo::Pluie || currentMeteo == Meteo::Orage){

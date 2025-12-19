@@ -82,13 +82,13 @@
         ImGui::Begin("Controle Meteo");
         if (ImGui::Button("Soleil"))  {
             SetMeteo( Meteo::Soleil);
-            drawsun = true;
+            DrawSoleil(renderer);
             
             
         }
         if (ImGui::Button("Nuageux")){
           SetMeteo(Meteo::Nuageux);
-          DrawNuages(renderer);
+          DrawNuageux(renderer);
           SDL_RenderClear(renderer);
         }
         if (ImGui::Button("Pluie"))  {
@@ -115,6 +115,7 @@
         case Meteo::Soleil:
         std::cout<<"la meteo actuelle est le soleil";
         DrawSoleil(renderer);
+    
         break;
         case Meteo::Pluie:
         DrawPluie(renderer);
@@ -126,7 +127,7 @@
         DrawNeige(renderer);
         break;
         case Meteo::Nuageux:
-        DrawNuages(renderer);
+        DrawNuageux(renderer);
         default:
             break;
         }
