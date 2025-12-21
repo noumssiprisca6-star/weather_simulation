@@ -29,7 +29,7 @@ void drawFilledCircle(SDL_Renderer* renderer, int cx, int cy, int radius)
 
 // DESSIN DU SOLEIL
 
-void drawSun(SDL_Renderer* renderer)
+void DrawSoleil(SDL_Renderer* renderer)
 {
     SDL_SetRenderDrawColor(renderer, 255, 200, 0, 255);
 
@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
         SDL_RenderClear(renderer);
 
         // Soleil
-        drawSun(renderer);
+        DrawSoleil(renderer);
 
         // Nuages animés
         for (auto& cloud : clouds) {

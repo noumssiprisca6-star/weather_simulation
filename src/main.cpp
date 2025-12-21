@@ -88,7 +88,6 @@
         }
         if (ImGui::Button("Nuageux")){
           SetMeteo(Meteo::Nuageux);
-          DrawNuageux(renderer);
           SDL_RenderClear(renderer);
         }
         if (ImGui::Button("Pluie"))  {
@@ -113,28 +112,30 @@
         switch (meteo)
         {
         case Meteo::Soleil:
-        std::cout<<"la meteo actuelle est le soleil";
-        DrawSoleil(renderer);
-    
+        std::cout<<"la meteo actuelle est ensoleillée"<<std::endl;
         break;
+
         case Meteo::Pluie:
-        DrawPluie(renderer);
+        std::cout<<"la meteo actuelle est la pluie " <<std::endl; 
         break;
+
         case Meteo::Orage:
-        DrawOrage(renderer);
+        std::cout<<"la meteo actuelle est orageuse "<<std::endl;
         break;
+
         case Meteo::Neige:
-        DrawNeige(renderer);
+        std::cout<<"la meteo actuelle est  celle de l'hyver "<<std::endl;
         break;
+
         case Meteo::Nuageux:
-        DrawNuageux(renderer);
+        std::cout<<"la meteo actuelle est celle de l'automne"<<std::endl;
         default:
             break;
         }
       
         ImGui::Separator();
         ImGui::End();
-        ImGui::Render();
+         ImGui::Render();
         
         
         SDL_SetRenderDrawColor(renderer, 135, 206, 235, 255);

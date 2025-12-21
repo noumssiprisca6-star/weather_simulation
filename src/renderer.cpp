@@ -97,25 +97,3 @@ void DrawNeige(SDL_Renderer* renderer){
         SDL_RenderPoint(renderer, x , y );
     }
 }
-      //dessin selon le choix de la video 
-      void DrawScene(SDL_Renderer* renderer, Meteo meteo){
-        switch (meteo)
-        {
-        case Meteo::Soleil:
-        DrawSoleil(renderer );
-        break;
-        case Meteo::Pluie:
-        DrawPluie(renderer);
-        break;
-        case Meteo::Orage:
-        DrawOrage(renderer);
-        break;
-        case Meteo::Neige:
-        DrawNeige(renderer);
-        break;
-        case Meteo::Nuageux:
-        DrawNuageux(renderer) ;
-        default:
-            break;
-        }
-      }

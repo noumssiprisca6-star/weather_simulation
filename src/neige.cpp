@@ -18,7 +18,7 @@ struct SnowFlake {
 };
 
 // Dessin d'un cercle plein
-void drawFilledCircle(SDL_Renderer* renderer, int cx, int cy, int r)
+void DrawFilledCircle(SDL_Renderer* renderer, int cx, int cy, int r)
 {
     for (int y = -r; y <= r; y++) {
         for (int x = -r; x <= r; x++) {
@@ -30,11 +30,11 @@ void drawFilledCircle(SDL_Renderer* renderer, int cx, int cy, int r)
 }
 
 // Dessin de la neige
-void drawSnow(SDL_Renderer* renderer, const std::vector<SnowFlake>& snow)
+void DrawNeige(SDL_Renderer* renderer, const std::vector<SnowFlake>& snow)
 {
     SDL_SetRenderDrawColor(renderer, 240, 240, 245, 200);
     for (const auto& f : snow) {
-        drawFilledCircle(renderer, (int)f.x, (int)f.y, f.size);
+        DrawFilledCircle(renderer, (int)f.x, (int)f.y, f.size);
     }
 }
 
@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
         }
 
         // Dessin de la neige
-        drawSnow(renderer, snow);
+        DrawNeige(renderer, snow);
 
         SDL_RenderPresent(renderer);
         SDL_Delay(16);

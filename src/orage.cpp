@@ -23,7 +23,7 @@ struct RainDrop {
 };
 
 // Dessin d'un cercle plein
-void drawFilledCircle(SDL_Renderer* renderer, int cx, int cy, int r)
+void drawFilCircle(SDL_Renderer* renderer, int cx, int cy, int r)
 {
     for (int y = -r; y <= r; y++) {
         for (int x = -r; x <= r; x++) {
@@ -35,14 +35,14 @@ void drawFilledCircle(SDL_Renderer* renderer, int cx, int cy, int r)
 }
 
 // Dessin de nuage au ton gris  lourd
-void drawCloud(SDL_Renderer* renderer, int x, int y)
+void DrawOrage(SDL_Renderer* renderer, int x, int y)
 {
     SDL_SetRenderDrawColor(renderer, 130, 130, 130, 255);//gris foncé
-    drawFilledCircle(renderer, x, y, 55);
-    drawFilledCircle(renderer, x + 150, y - 10, 70);
-    drawFilledCircle(renderer, x + 90, y+30, 65);
-    drawFilledCircle(renderer, x + 220, y + 10, 55);
-    drawFilledCircle(renderer , x +280, y+20 ,45);
+    drawFilCircle(renderer, x, y, 70);
+    drawFilCircle(renderer, x + 150, y - 10, 65);
+    drawFilCircle(renderer, x + 190, y+30, 60);
+    drawFilCircle(renderer, x + 220, y + 10, 55);
+    drawFilCircle(renderer , x +280, y+20 ,45);
 }
 
 // Dessin de la pluie
@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
     }
     //deuxieme couche de nuage tres chargé
     for(auto& c : clouds ){
-        drawCloud(renderer , (int)c.x - 120, (int)c.y +90);
+        DrawOrage(renderer , (int)c.x - 120, (int)c.y +90);
     }
 
     // Création de la pluie
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
 
         // Vent + nuages
         for (auto& c : clouds) {
-            drawCloud(renderer, (int)c.x, (int)c.y);
+            DrawOrage(renderer, (int)c.x, (int)c.y);
             c.x += c.speed;
             if (c.x > WIDTH + 100) c.x = -120;
         }
