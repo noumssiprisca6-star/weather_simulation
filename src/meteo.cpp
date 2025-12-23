@@ -20,7 +20,7 @@ void DrawMeteo (){
 
         }
         if (currentMeteo == Meteo::Pluie || currentMeteo == Meteo::Orage){
-            DrawPluie(renderer);
+            DrawOrage(renderer);
     
         }
         if (currentMeteo == Meteo::Orage){

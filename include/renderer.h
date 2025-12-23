@@ -13,11 +13,10 @@ void cleanupRenderer();
 //pour les dessin
 void DrawFilledCircle(SDL_Renderer* renderer , int cx , int cy , int radius );
 void DrawSoleil( SDL_Renderer* renderer);
-void DrawNuageux(SDL_Renderer* renderer );
-void DrawPluie(SDL_Renderer* renderer);
+void drawCloud(SDL_Renderer* renderer, int x, int y);
 void DrawNeige(SDL_Renderer* renderer);
 void DrawOrage(SDL_Renderer* renderer );
-void DrawScene(SDL_Renderer* renderer);
+
 
 #endif
 

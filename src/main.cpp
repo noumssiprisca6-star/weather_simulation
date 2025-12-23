@@ -1,10 +1,11 @@
 #include <SDL3/SDL.h>
+#include"../libs/SDL3/SDL3_image/SDL_image.h"
 #include <SDL3/SDL_main.h>
 #include <iostream>
 #include "../include/meteo.h"
 #include "../include/ui.h"
 #include "../include/renderer.h"
-
+#include<vector>
 // main.cpp
 #define STB_IMAGE_IMPLEMENTATION
 #include "../libs/stb/stb_image.h"
@@ -14,16 +15,18 @@
 #include <windows.h>
 #include<cstdlib>
 
-  
+
+
   int SDL_main(int argc, char* argv[]) {
-    bool drawsun = false;
+    bool showsun = false;
     SetConsoleCP(CP_UTF8);
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr <<"Erreur SDL_Init: " << SDL_GetError() << std::endl;
+    
     }
 
     std::cout << "SDL3 initialisé avec succès !!" << std::endl;
-
+ 
     SDL_Window* window = SDL_CreateWindow("Meteo VIsuelle", 800, 600, SDL_WINDOW_RESIZABLE);
     if (!window) {
         std::cerr << "Erreur de creation fenêtre: " << std::endl;
@@ -32,6 +35,8 @@
     }
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
+
+   
     if (!renderer) {
         std::cerr << "Erreur de création renderer: " << SDL_GetError() << std::endl;
         SDL_DestroyWindow(window);
@@ -52,9 +57,16 @@
     float clear_color[4] = {0.1f, 0.1f, 0.15f, 1.0f};
     float slider_value = 0.5f;
     int counter;
-    char text_buffer[256] = "Écris quelque chose ici !";
+    char text_buffer[256] = " hello";
     Meteo meteo;
-
+    
+     //variable de la boucle principale
+// creation de la surface
+SDL_Surface* surface = IMG_Load("assets/im.jpg");
+//creation de la texture à partir de la surface 
+SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer , surface);
+//destruction de la surface creer 
+SDL_DestroySurface(surface);
     //boucle de jeu
     bool running = true;
     SDL_Event event;
@@ -67,24 +79,19 @@
             if (event.type == SDL_EVENT_QUIT) {
                 running = false;
             }
-        }
- //  Fond ciel
-        
-
-        // METEO
-    
-
         //  IMGUI
         ImGui_ImplSDLRenderer3_NewFrame();
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
-        
         ImGui::Begin("Controle Meteo");
+
         if (ImGui::Button("Soleil"))  {
             SetMeteo( Meteo::Soleil);
-            DrawSoleil(renderer);
-            
-            
+            showsun = true ;
+            if(showsun){
+                DrawSoleil(renderer);
+            }
+          
         }
         if (ImGui::Button("Nuageux")){
           SetMeteo(Meteo::Nuageux);
@@ -92,7 +99,7 @@
         }
         if (ImGui::Button("Pluie"))  {
         SetMeteo (Meteo::Pluie);
-        DrawPluie(renderer);
+        DrawOrage(renderer);
         SDL_RenderClear(renderer);
         }
           
@@ -108,52 +115,26 @@
         }
   
     
-         
-        switch (meteo)
-        {
-        case Meteo::Soleil:
-        std::cout<<"la meteo actuelle est ensoleillée"<<std::endl;
-        break;
-
-        case Meteo::Pluie:
-        std::cout<<"la meteo actuelle est la pluie " <<std::endl; 
-        break;
-
-        case Meteo::Orage:
-        std::cout<<"la meteo actuelle est orageuse "<<std::endl;
-        break;
-
-        case Meteo::Neige:
-        std::cout<<"la meteo actuelle est  celle de l'hyver "<<std::endl;
-        break;
-
-        case Meteo::Nuageux:
-        std::cout<<"la meteo actuelle est celle de l'automne"<<std::endl;
-        default:
-            break;
-        }
-      
         ImGui::Separator();
         ImGui::End();
          ImGui::Render();
         
         
-        SDL_SetRenderDrawColor(renderer, 135, 206, 235, 255);
-        SDL_RenderClear(renderer);
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
         SDL_RenderPresent(renderer);
+        SDL_RenderTexture(renderer, texture,nullptr , nullptr);
+        SDL_RenderPresent(renderer);
         
-    
-
-        //effacage de l'ecran avec la couleur choisie
-        
-        //dessin de ImGui
+        }
     }
-    
+        
     ImGui_ImplSDLRenderer3_Shutdown();
     ImGui_ImplSDL3_Shutdown();
     ImGui::DestroyContext();
     
+        
+    //effface toutes les fenetres creer
+   SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
