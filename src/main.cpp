@@ -97,7 +97,7 @@ SDL_DestroySurface(surface);
           SetMeteo(Meteo::Nuageux);
           SDL_RenderClear(renderer);
         }
-        if (ImGui::Button("Pluie"))  {
+       if (ImGui::Button("Pluie"))  {
         SetMeteo (Meteo::Pluie);
         DrawOrage(renderer);
         SDL_RenderClear(renderer);
