@@ -18,7 +18,6 @@
 
 
   int SDL_main(int argc, char* argv[]) {
-    bool showsun = false;
     SetConsoleCP(CP_UTF8);
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         std::cerr <<"Erreur SDL_Init: " << SDL_GetError() << std::endl;
@@ -52,8 +51,12 @@
     ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
     ImGui_ImplSDLRenderer3_Init(renderer);
 
-    bool show_demo_window = true;
+    bool show_demo_window = false; //pas besoin de la fenetre de demo dans le projet final
     bool show_custom_window = true;
+    bool showsoleil =false ;
+    bool showneige = false; //dessin de l'evenement orage si vrai
+    bool showorage = false;//dessin de la pluie si vrai
+    bool shownuage = false; //dessin des nuages si vrai
     float clear_color[4] = {0.1f, 0.1f, 0.15f, 1.0f};
     float slider_value = 0.5f;
     int counter;
@@ -74,44 +77,71 @@ SDL_DestroySurface(surface);
     while (running) {
         while (SDL_PollEvent(&event)) {
             ImGui_ImplSDL3_ProcessEvent(&event);
-        
-
             if (event.type == SDL_EVENT_QUIT) {
                 running = false;
             }
+            //ne place plus le code de ta fenetre ici❌
+        }
+        /**
+         * les frames IMGUI commencent a se faire creer ici sinon il y aura des problemes 
+         * lors de l'affichage.
+         */
         //  IMGUI
         ImGui_ImplSDLRenderer3_NewFrame();
         ImGui_ImplSDL3_NewFrame();
         ImGui::NewFrame();
         ImGui::Begin("Controle Meteo");
 
+        /**
+         * les boutons devrons gerer des booleens decidant de l'affichage ou non de evenements 
+         * metheorologiques. laisser les fonctions de dessin comme DrawOrage dans les instructions
+         * lancees par les clics sur les boutons n'empechent pas le dessin de l'orage mais cela se fait
+         * de facon tres breve. tes evenement metheorologiques s'affichent mais ne restent pas assez 
+         * longtemps pour etre percus.
+         * 
+         * malheureusement l'enum class Meteo ne sert pas a grand chose vu que les booleens passent mieux
+         * mais je laisse qund meme tu verras si tu en as encore besoin ou pas.
+         */
         if (ImGui::Button("Soleil"))  {
-            SetMeteo( Meteo::Soleil);
-            showsun = true ;
-            if(showsun){
-                DrawSoleil(renderer);
+            SetMeteo( Meteo::Soleil); 
+            showsoleil = true ;
+            if(showsoleil){
+                loadsoleilTexture(renderer);
             }
-          
+            shownuage =false; 
+            showorage = false;
+            showneige = false;
+            //il est important de preciser que l'eevenement metheo precedent
+            //(selon le choix de l'utilisateur) doit s'arreter avant de lancer
+            //le nouvel evenement
         }
         if (ImGui::Button("Nuageux")){
           SetMeteo(Meteo::Nuageux);
-          SDL_RenderClear(renderer);
+          shownuage= true; //pour les nuages
         }
        if (ImGui::Button("Pluie"))  {
         SetMeteo (Meteo::Pluie);
-        DrawOrage(renderer);
-        SDL_RenderClear(renderer);
+        showorage = true; //pour la pluie
+        showneige = false;
+        showsoleil= false;
+        shownuage =false;
+        
         }
-          
-        if (ImGui::Button("Neige"))  {
-        SetMeteo(Meteo::Neige);
-        DrawNeige(renderer);
-        SDL_RenderClear(renderer);
+        //je te laisse faire le cas de la neige pour t'exercer
+        if (ImGui::Button("Orage"))  {
+        SetMeteo(Meteo::Orage);
+            showneige = true;
+            showsoleil = false;
+            shownuage=false;
+            showorage = false;
+    
         } 
-        if (ImGui::Button("Orage")) {
-              SetMeteo( Meteo::Orage);
-              DrawOrage(renderer);
-              SDL_RenderClear(renderer);
+        if (ImGui::Button("Neige")) {
+            SetMeteo(Meteo::Neige);
+            showorage = true;
+            showsoleil = false;
+            shownuage=false;
+            showneige= false;
         }
   
     
@@ -119,13 +149,35 @@ SDL_DestroySurface(surface);
         ImGui::End();
          ImGui::Render();
         
-        
-        ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
-        SDL_RenderPresent(renderer);
         SDL_RenderTexture(renderer, texture,nullptr , nullptr);
-        SDL_RenderPresent(renderer);
-        
+        //ici, grace au booleen on peut choisir quel etat de metheo on doit afficher
+        /**
+         * show_cloud ne devient vraie qu'apres avoir appuye sur le bouton orage de ce fait
+         * tantque l'utilisateur ne le fait pas on ne dessine pas d'orage dans la fenetre
+         * c'est pareil pour le soleil. son affichage depend de l'etat true ou false de 
+         * showsun
+         */
+        //on dessine l'orage. il ne disparaitra pas tant que le bouton ne renvoie pas
+        //show_cloud a false.
+        if (showneige){
+            DrawOrage(renderer);
         }
+        //on dessine le soleil. il ne disparaitra pas tant que le bouton ne renvoie pas
+        //showsun a false.
+        if(showsoleil){
+            DrawSoleil(renderer);
+        }
+        //pluie si show_rain est vrai
+        if (shownuage) {
+            DrawOrage(renderer);
+        }
+        if(showorage){
+            DrawOrage(renderer);
+        }
+        ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
+        
+        
+        SDL_RenderPresent(renderer);
     }
         
     ImGui_ImplSDLRenderer3_Shutdown();

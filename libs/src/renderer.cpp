@@ -2,51 +2,35 @@
 #include <stb_image.h>
 #include <cmath>
 #include <cstdlib>
+#include"../libs/SDL3/SDL3_image/SDL_image.h"
 
 #include <SDL3/SDL.h>
 #include <cmath>
 
-
+SDL_Texture* soleiltexture = nullptr;
+//la fonction permettant l'ajout de l'image aui represente mon soleil
+void loadsoleilTexture(SDL_Renderer*renderer){
+    SDL_Surface* surface = IMG_Load("assets/imo.jpg");
+    if(!surface){
+        std::cerr << "Erreur chargement soleil : " <<std::endl;
+    }
+    soleiltexture = SDL_CreateTextureFromSurface(renderer , surface );
+    SDL_DestroySurface(surface);
+}
+//dessin de mon soleil en fonction de mon image
 void DrawSoleil(SDL_Renderer* renderer)
 {
-    // ☀ Soleil
-    SDL_SetRenderDrawColor(renderer, 255, 215, 0, 255);
-
-    int sunX = 600;
-    int sunY = 120;
-    int sunR = 60;
-
-    for (int a = 0; a < 360; a++)
-    {
-        float rad = a * 3.14159f / 180.0f;
-        SDL_RenderPoint(renderer,
-            sunX + cos(rad) * sunR,
-            sunY + sin(rad) * sunR);
+    if(!soleiltexture){
+        return;
     }
-
-    // ☁ Nuages blancs (overlay)
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-    static int cloudX = 50;
-    cloudX += 1;
-    if (cloudX > 800) cloudX = -200;
-
-    int cloudY = 200;
-
-    for (int a = 0; a < 360; a++)
-    {
-        float rad = a * 3.14159f / 180.0f;
-        SDL_RenderPoint(renderer,
-            cloudX + cos(rad) * 30,
-            cloudY + sin(rad) * 30);
-        SDL_RenderPoint(renderer,
-            cloudX + 40 + cos(rad) * 35,
-            cloudY + sin(rad) * 35);
-        SDL_RenderPoint(renderer,
-            cloudX + 90 + cos(rad) * 30,
-            cloudY + sin(rad) * 30);
-    }
+    SDL_FRect dst;
+    dst.x = 300;
+    dst.y = 150;
+    dst.w = 200;
+    dst.h = 200;
+    SDL_RenderTexture(renderer , soleiltexture, nullptr, &dst );
 }
+
 //  ORAGE (NUAGES + PLUIE)
 void DrawOrage(SDL_Renderer* renderer)
 {
