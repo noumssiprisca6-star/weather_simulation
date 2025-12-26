@@ -65,7 +65,7 @@ void DrawCloud(SDL_Renderer* renderer, int x, int y)
     };
 
     // Composition du nuage (plus ieurs cercles)
-    drawFilledCircle(x,      y,      20);
+    drawFilledCircle(x,  y,  20);
     drawFilledCircle(x + 25, y - 10,  25);
     drawFilledCircle(x + 55, y,      20);
     drawFilledCircle(x + 30, y + 10, 18);

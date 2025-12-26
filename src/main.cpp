@@ -108,6 +108,8 @@ SDL_DestroySurface(surface);
             shownuage = true; 
             if(showsoleil && shownuage){
                 DrawSoleil(renderer);
+                RenderScene(renderer);
+                
                
             }
             showorage = false;
@@ -173,6 +175,7 @@ SDL_DestroySurface(surface);
             SDL_SetRenderDrawColor (renderer ,135, 206, 235, 255);
                 SDL_RenderClear(renderer);
                 DrawSoleil(renderer); 
+            
             
                 
         }
