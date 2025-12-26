@@ -8,9 +8,8 @@
 #include<vector>
 
 
-extern SDL_Renderer* renderer;
-bool initRenderer(SDL_Window* window);
-void cleanupRenderer();
+bool initRenderer(SDL_Window* window, SDL_Renderer* renderer);
+void cleanupRenderer(SDL_Renderer* renderer);
 extern bool showSoleil;
 
 //pour les dessin
