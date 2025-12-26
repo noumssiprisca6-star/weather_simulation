@@ -50,7 +50,7 @@
     ImGui::StyleColorsDark();
     ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
     ImGui_ImplSDLRenderer3_Init(renderer);
-
+// etat de ka meteo 
     bool show_demo_window = false; //pas besoin de la fenetre de demo dans le projet final
     bool show_custom_window = true;
     bool showsoleil =false ;
@@ -105,10 +105,11 @@ SDL_DestroySurface(surface);
         if (ImGui::Button("Soleil"))  {
             SetMeteo( Meteo::Soleil); 
             showsoleil = true ;
-            if(showsoleil){
-                loadsoleilTexture(renderer);
+            shownuage = true; 
+            if(showsoleil && shownuage){
+                DrawSoleil(renderer);
+               
             }
-            shownuage =false; 
             showorage = false;
             showneige = false;
             //il est important de preciser que l'eevenement metheo precedent
@@ -116,7 +117,7 @@ SDL_DestroySurface(surface);
             //le nouvel evenement
         }
         if (ImGui::Button("Nuageux")){
-          SetMeteo(Meteo::Nuageux);
+          SetMeteo(Meteo::Nuage);
           shownuage= true; //pour les nuages
         }
        if (ImGui::Button("Pluie"))  {
@@ -130,6 +131,8 @@ SDL_DestroySurface(surface);
         //je te laisse faire le cas de la neige pour t'exercer
         if (ImGui::Button("Orage"))  {
         SetMeteo(Meteo::Orage);
+        SDL_SetRenderDrawColor(renderer , 220 ,220,220 ,255);
+            DrawOrage(renderer);
             showneige = true;
             showsoleil = false;
             shownuage=false;
@@ -139,6 +142,7 @@ SDL_DestroySurface(surface);
         if (ImGui::Button("Neige")) {
             SetMeteo(Meteo::Neige);
             showorage = true;
+            DrawNeige(renderer);
             showsoleil = false;
             shownuage=false;
             showneige= false;
@@ -160,18 +164,22 @@ SDL_DestroySurface(surface);
         //on dessine l'orage. il ne disparaitra pas tant que le bouton ne renvoie pas
         //show_cloud a false.
         if (showneige){
-            DrawOrage(renderer);
+            DrawNeige(renderer);
         }
         //on dessine le soleil. il ne disparaitra pas tant que le bouton ne renvoie pas
         //showsun a false.
         if(showsoleil){
-            DrawSoleil(renderer);
+            
+            SDL_SetRenderDrawColor (renderer ,135, 206, 235, 255);
+                SDL_RenderClear(renderer);
+                DrawSoleil(renderer);
+                RenderScene(renderer);
         }
         //pluie si show_rain est vrai
-        if (shownuage) {
-            DrawOrage(renderer);
-        }
+       
         if(showorage){
+        
+            SDL_SetRenderDrawColor(renderer , 220 ,220,220 ,255);
             DrawOrage(renderer);
         }
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);

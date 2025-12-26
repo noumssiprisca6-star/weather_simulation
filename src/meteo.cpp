@@ -1,7 +1,7 @@
 #include"../include/meteo.h"
 #include"../include/renderer.h"
 static Meteo currentMeteo = Meteo::Soleil;
-static float cloudX = 0 ;
+float cloudX = 0 ;
 void SetMeteo (Meteo type){
     currentMeteo = type;
 
@@ -15,8 +15,9 @@ cloudX = -200 ;
 void DrawMeteo (){
     if (currentMeteo == Meteo::Soleil){
         DrawSoleil(renderer);
-        if ( currentMeteo == Meteo::Nuageux || currentMeteo == Meteo::Pluie || currentMeteo == Meteo::Orage){
-        std::cout<<"solei"<<std::endl;
+        
+        if ( currentMeteo == Meteo::Nuage || currentMeteo == Meteo::Pluie || currentMeteo == Meteo::Orage){
+        std::cout<<"nuages"<<std::endl;
 
         }
         if (currentMeteo == Meteo::Pluie || currentMeteo == Meteo::Orage){

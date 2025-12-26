@@ -8,7 +8,7 @@
 enum class Meteo {
     Soleil,
     Pluie,
-    Nuageux,
+    Nuage,
     Neige,
     Orage
 };
