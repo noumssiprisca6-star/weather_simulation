@@ -8,36 +8,7 @@
 #include <SDL3/SDL.h>
 #include <cmath>
 
-//  ORAGE (NUAGES + PLUIE)
-void DrawOrage(SDL_Renderer* renderer)
-{
-    // Ciel sombre
-    SDL_SetRenderDrawColor(renderer, 80, 80, 80, 255);
-    SDL_RenderClear(renderer);
 
-    // Nuages gris
-    SDL_SetRenderDrawColor(renderer, 160, 160, 160, 255);
-
-    for (int c = 0; c < 3; c++) {
-        int baseX = 150 + c * 200;
-        int baseY = 120;
-
-        for (int i = 0; i < 3; i++) {
-            int cx = baseX + i * 40;
-            int cy = baseY + (i % 2) * 10;
-            int r  = 30;
-
-            for (int a = 0; a < 360; a++) {
-                float rad = a * M_PI / 180.0f;
-                int x = cx + cos(rad) * r;
-                int y = cy + sin(rad) * r;
-                SDL_RenderPoint(renderer, x, y);
-            }
-        }
-    }
-
-}
-SDL_Renderer* renderer = nullptr;
 //elelment
 struct element {
     float x , y;
@@ -93,15 +64,19 @@ void DrawCloud(SDL_Renderer* renderer, int x, int y)
         }
     };
 
-    // Composition du nuage (plusieurs cercles)
+    // Composition du nuage (plus ieurs cercles)
     drawFilledCircle(x,      y,      20);
     drawFilledCircle(x + 25, y - 10,  25);
     drawFilledCircle(x + 55, y,      20);
     drawFilledCircle(x + 30, y + 10, 18);
 }
+
+// la scene d'animation des nuages 
+
 void RenderScene(SDL_Renderer* renderer){
     int CloudX = -100;
     CloudX += 1;
+
     if(CloudX > 800){
         CloudX = -100;
     }

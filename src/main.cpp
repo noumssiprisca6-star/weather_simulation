@@ -172,8 +172,9 @@ SDL_DestroySurface(surface);
             
             SDL_SetRenderDrawColor (renderer ,135, 206, 235, 255);
                 SDL_RenderClear(renderer);
-                DrawSoleil(renderer);
-                RenderScene(renderer);
+                DrawSoleil(renderer); 
+            
+                
         }
         //pluie si show_rain est vrai
        
