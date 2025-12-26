@@ -1,5 +1,5 @@
 #include <SDL3/SDL.h>
-#include"../libs/SDL3/SDL3_image/SDL_image.h"
+#include"../src/SDL3/SDL3_image/SDL_image.h"
 #include <SDL3/SDL_main.h>
 #include <iostream>
 #include "../include/meteo.h"
@@ -175,6 +175,7 @@ SDL_DestroySurface(surface);
             SDL_SetRenderDrawColor (renderer ,135, 206, 235, 255);
                 SDL_RenderClear(renderer);
                 DrawSoleil(renderer); 
+                RenderScene(renderer);
             
             
                 
