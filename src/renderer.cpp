@@ -1,10 +1,14 @@
 #include "renderer.h"
-#include<SDL3/SDL.h>
-#include<../libs/stb/stb_image.h>
-#include<cstdlib>
-#include<cmath>
+#include <stb_image.h>
+#include <cmath>
+#include <cstdlib>
+#include<vector>
+#include"../src/SDL3/SDL3_image/SDL_image.h"
 
-SDL_Renderer* renderer = nullptr;
+#include <SDL3/SDL.h>
+#include <cmath>
+
+
 //elelment
 struct element {
     float x , y;
@@ -37,28 +41,54 @@ void DrawFilledCircle(SDL_Renderer* renderer , int cx , int cy , int radius){
         DrawFilledCircle(renderer ,650 ,120 ,50);
     }
 
-//NUAGE
-struct Cloud {
-    float x, y;
-    float speed;
-};
 
-void DrawNuageux(SDL_Renderer* renderer, int x, int y)
+//pour dessiner les nuages
+
+void DrawCloud(SDL_Renderer* renderer, int x, int y)
 {
-    SDL_SetRenderDrawColor(renderer, 240, 240, 240, 255);
-    DrawFilledCircle(renderer, x, y, 25);
-    DrawFilledCircle(renderer, x + 30, y - 10, 30);
-    DrawFilledCircle(renderer, x + 60, y, 25);
-    DrawFilledCircle(renderer, x + 30, y + 10, 28);
-}
+    // Couleur blanche
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 
-/* Nuages */
-    std::vector<Cloud> clouds = {
-        {100, 120, 0.3f},
-        {300, 180, 0.4f},
-        {500, 150, 0.2f}
+    // Fonction locale : cercle plein
+    auto drawFilledCircle = [&](int cx, int cy, int radius)
+    {
+        for (int dy = -radius; dy <= radius; dy++)
+        {
+            for (int dx = -radius; dx <= radius; dx++)
+            {
+                if (dx * dx + dy * dy <= radius * radius)
+                {
+                    SDL_RenderPoint(renderer, cx + dx, cy + dy);
+                }
+            }
+        }
     };
 
+    // Composition du nuage (plus ieurs cercles)
+    drawFilledCircle(x,  y,  20);
+    drawFilledCircle(x + 25, y - 10,  25);
+    drawFilledCircle(x + 55, y,      20);
+    drawFilledCircle(x + 30, y + 10, 18);
+}
+
+// la scene d'animation des nuages 
+
+void RenderScene(SDL_Renderer* renderer){
+    int CloudX = -100;
+    CloudX += 1;
+
+    if(CloudX > 800){
+        CloudX = -100;
+    }
+ 
+    //appel de le fonction nuage
+
+    DrawCloud(renderer, 120, 100);
+    DrawCloud(renderer, 350, 150);
+    DrawCloud(renderer, 600, 90);
+    DrawCloud(renderer , CloudX , 120);
+    SDL_RenderPresent(renderer);
+}
 
 //pour dessiner la pluie 
 void DrawPluie ( SDL_Renderer* renderer ){
