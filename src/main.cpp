@@ -106,12 +106,6 @@ SDL_DestroySurface(surface);
             SetMeteo( Meteo::Soleil); 
             showsoleil = true ;
             shownuage = true; 
-            if(showsoleil && shownuage){
-                DrawSoleil(renderer);
-                RenderScene(renderer);
-                
-               
-            }
             showorage = false;
             showneige = false;
             //il est important de preciser que l'eevenement metheo precedent
@@ -134,20 +128,18 @@ SDL_DestroySurface(surface);
         if (ImGui::Button("Orage"))  {
         SetMeteo(Meteo::Orage);
         SDL_SetRenderDrawColor(renderer , 220 ,220,220 ,255);
-            DrawOrage(renderer);
-            showneige = true;
+            showorage = true;
             showsoleil = false;
             shownuage=false;
-            showorage = false;
-    
+            showneige = false;
         } 
         if (ImGui::Button("Neige")) {
             SetMeteo(Meteo::Neige);
-            showorage = true;
-            DrawNeige(renderer);
+            showneige= true;
             showsoleil = false;
             shownuage=false;
-            showneige= false;
+            showorage = false;
+          
         }
   
     
@@ -166,7 +158,7 @@ SDL_DestroySurface(surface);
         //on dessine l'orage. il ne disparaitra pas tant que le bouton ne renvoie pas
         //show_cloud a false.
         if (showneige){
-            DrawNeige(renderer);
+            DrawNeige(renderer ,800 ,600);
         }
         //on dessine le soleil. il ne disparaitra pas tant que le bouton ne renvoie pas
         //showsun a false.
@@ -176,8 +168,6 @@ SDL_DestroySurface(surface);
                 SDL_RenderClear(renderer);
                 DrawSoleil(renderer); 
                 RenderScene(renderer);
-            
-            
                 
         }
         //pluie si show_rain est vrai
@@ -185,7 +175,7 @@ SDL_DestroySurface(surface);
         if(showorage){
         
             SDL_SetRenderDrawColor(renderer , 220 ,220,220 ,255);
-            DrawOrage(renderer);
+            DrawOrage(renderer ,800 ,600);
         }
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
         
