@@ -50,13 +50,16 @@
     ImGui::StyleColorsDark();
     ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
     ImGui_ImplSDLRenderer3_Init(renderer);
-// etat de ka meteo 
+
+// etat de la meteo 
     bool show_demo_window = false; //pas besoin de la fenetre de demo dans le projet final
     bool show_custom_window = true;
     bool showsoleil =false ;
     bool showneige = false; //dessin de l'evenement orage si vrai
     bool showorage = false;//dessin de la pluie si vrai
     bool shownuage = false; //dessin des nuages si vrai
+    bool shownuit = false ; //dessin de la nuit 
+    bool showetoile = false ; //pour l'etoile fillante 
     float clear_color[4] = {0.1f, 0.1f, 0.15f, 1.0f};
     float slider_value = 0.5f;
     int counter;
@@ -64,12 +67,13 @@
     Meteo meteo;
     
      //variable de la boucle principale
-// creation de la surface
+   // creation de la surface
 SDL_Surface* surface = IMG_Load("assets/im.jpg");
 //creation de la texture à partir de la surface 
 SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer , surface);
 //destruction de la surface creer 
 SDL_DestroySurface(surface);
+
     //boucle de jeu
     bool running = true;
     SDL_Event event;
@@ -94,13 +98,9 @@ SDL_DestroySurface(surface);
 
         /**
          * les boutons devrons gerer des booleens decidant de l'affichage ou non de evenements 
-         * metheorologiques. laisser les fonctions de dessin comme DrawOrage dans les instructions
-         * lancees par les clics sur les boutons n'empechent pas le dessin de l'orage mais cela se fait
-         * de facon tres breve. tes evenement metheorologiques s'affichent mais ne restent pas assez 
-         * longtemps pour etre percus.
-         * 
-         * malheureusement l'enum class Meteo ne sert pas a grand chose vu que les booleens passent mieux
-         * mais je laisse qund meme tu verras si tu en as encore besoin ou pas.
+         * metheorologiques
+         * A chaque bouton sont rendu 
+         * exploraont ensemble le fonctionnement de ma meteo
          */
         if (ImGui::Button("Soleil"))  {
             SetMeteo( Meteo::Soleil); 
@@ -108,38 +108,41 @@ SDL_DestroySurface(surface);
             shownuage = true; 
             showorage = false;
             showneige = false;
-            //il est important de preciser que l'eevenement metheo precedent
+            showetoile = false ;
+            //il est important de preciser que l'evenement metheo precedent
             //(selon le choix de l'utilisateur) doit s'arreter avant de lancer
             //le nouvel evenement
         }
-        if (ImGui::Button("Nuageux")){
-          SetMeteo(Meteo::Nuage);
-          shownuage= true; //pour les nuages
-        }
-       if (ImGui::Button("Pluie"))  {
-        SetMeteo (Meteo::Pluie);
-        showorage = true; //pour la pluie
-        showneige = false;
-        showsoleil= false;
-        shownuage =false;
-        
-        }
-        //je te laisse faire le cas de la neige pour t'exercer
+       
+    
+
         if (ImGui::Button("Orage"))  {
         SetMeteo(Meteo::Orage);
         SDL_SetRenderDrawColor(renderer , 220 ,220,220 ,255);
-            showorage = true;
+            showorage = true;//pour l'orage
             showsoleil = false;
             shownuage=false;
             showneige = false;
+            showetoile = false ;
         } 
         if (ImGui::Button("Neige")) {
-            SetMeteo(Meteo::Neige);
+            SetMeteo(Meteo::Neige);// pour la neige
             showneige= true;
             showsoleil = false;
             shownuage=false;
             showorage = false;
+            showetoile = false ;
           
+        }
+        if (ImGui::Button("nuit")){
+            SetMeteo(Meteo::nuit); //pour la nuit 
+            shownuit = true ;
+            showetoile = true ;
+            showsoleil = false ;
+            showneige = false ;
+            shownuage  = false;
+            showorage = false ;
+        
         }
   
     
@@ -150,10 +153,10 @@ SDL_DestroySurface(surface);
         SDL_RenderTexture(renderer, texture,nullptr , nullptr);
         //ici, grace au booleen on peut choisir quel etat de metheo on doit afficher
         /**
-         * show_cloud ne devient vraie qu'apres avoir appuye sur le bouton orage de ce fait
+         * showorage ne devient vraie qu'apres avoir appuye sur le bouton orage de ce fait
          * tantque l'utilisateur ne le fait pas on ne dessine pas d'orage dans la fenetre
          * c'est pareil pour le soleil. son affichage depend de l'etat true ou false de 
-         * showsun
+         * showsoleil
          */
         //on dessine l'orage. il ne disparaitra pas tant que le bouton ne renvoie pas
         //show_cloud a false.
@@ -161,7 +164,7 @@ SDL_DestroySurface(surface);
             DrawNeige(renderer ,800 ,600);
         }
         //on dessine le soleil. il ne disparaitra pas tant que le bouton ne renvoie pas
-        //showsun a false.
+        //showsoleil a false.
         if(showsoleil){
             
             SDL_SetRenderDrawColor (renderer ,135, 206, 235, 255);
@@ -170,12 +173,18 @@ SDL_DestroySurface(surface);
                 RenderScene(renderer);
                 
         }
-        //pluie si show_rain est vrai
+        //pluie si showorage est vrai
        
         if(showorage){
         
             SDL_SetRenderDrawColor(renderer , 220 ,220,220 ,255);
             DrawOrage(renderer ,800 ,600);
+            DrawNuage(renderer , 30, 20);
+            RenderNuage(renderer);
+        }
+        if(shownuit && showetoile){
+            DrawNuit(renderer , 800 ,600);
+            DrawEtoile(renderer , 800 , 600);
         }
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
         

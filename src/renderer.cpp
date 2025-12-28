@@ -27,12 +27,12 @@ struct Cloud {
 
 
 Cloud clouds[6] = {
-    { -150.0f, 100, 0.6f },
-    { -300.0f, 150, 1.0f },
+    { -150.0f, 100, 0.5f },
+    { -300.0f, 150, 0.8f },
     { -500.0f, 90,  0.9f },
-    {-200.0f , 92 , 1.2f},
-    {-150.0f , 120 ,0.8f },
-    {-400.0f , 102 , 0.7f}
+    {-200.0f , 92 , 1.0f},
+    {-150.0f , 120 ,0.7f },
+    {-400.0f , 102 , 0.6f}
 };
 
 static std::vector<element> rainDrops ;
@@ -115,21 +115,52 @@ void RenderScene(SDL_Renderer* renderer){
 }
     
 
-//pour dessiner la pluie 
-void DrawPluie ( SDL_Renderer* renderer ){
-    SDL_SetRenderDrawColor(renderer,100,100,255,255);
-   for (int i = 0; i< 200; i++){
-    int x = rand()% 800 ;
-    int y = rand() % 600;
-    SDL_RenderLine(renderer , x , y , x  , y + 10);
-   }    
-   }
+
    
 
  
 #define NB_PLUIE 400   // Nombre de gouttes de pluie
 #define NB_ECLAIR 3    // Nombre d'éclairs
 #define NB_NUAGES 5    // Nombre de nuages
+
+// Dessin d'un cercle plein
+void drawFilCircle(SDL_Renderer* renderer, int cx, int cy, int r)
+{
+    for (int y = -r; y <= r; y++) {
+        for (int x = -r; x <= r; x++) {
+            if (x * x + y * y <= r * r) {
+                SDL_RenderPoint(renderer, cx + x, cy + y);
+            }
+        }
+    }
+}
+// Dessin de nuage au ton gris  lourd
+void DrawNuage(SDL_Renderer* renderer, int x, int y)
+{
+    SDL_SetRenderDrawColor(renderer, 130, 130, 130, 255);//gris foncé
+    drawFilCircle(renderer, x, y, 70);
+    drawFilCircle(renderer, x + 150, y - 10, 65);
+    drawFilCircle(renderer, x + 190, y+30, 60);
+    drawFilCircle(renderer, x + 220, y + 10, 55);
+    drawFilCircle(renderer , x +280, y+20 ,45);
+}
+// Création des  gros nuages gris nuages et animation
+void RenderNuage(SDL_Renderer* renderer){
+
+    for (int i = 0; i < 8 ; i++) {
+        clouds[i].x += clouds[i].speed;
+        if (clouds[i].x > 700) {
+            clouds[i].x = -40;
+        }
+
+        DrawNuage(renderer, (int)clouds[i].x, clouds[i].y);
+    }
+
+    SDL_RenderPresent(renderer);
+
+}
+    
+//pour dessiner l'orage
 
 void DrawOrage(SDL_Renderer* renderer, int width, int height)
 {
@@ -172,16 +203,6 @@ void DrawOrage(SDL_Renderer* renderer, int width, int height)
         initEclair = 1;
     }
 
-    // Initialisation nuages
-    if (initNuage == 0)
-    {
-        for (int i = 0; i < NB_NUAGES; i++)
-        {
-            nuageX[i] = rand() % width;
-            nuageY[i] = 50 + rand() % 100;
-        }
-        initNuage = 1;
-    }
 
     // --- Fond gris sombre ---
     SDL_SetRenderDrawColor(renderer, 50, 50, 60, 255);
@@ -306,5 +327,139 @@ void DrawNeige(SDL_Renderer* renderer, int width, int height)
         /* Reste dans l'écran horizontalement */
         if (x[i] < 0) x[i] = 0;
         if (x[i] > width) x[i] = width;
+    }
+}
+
+// desin de la nuit 
+#define NB_ETOILES 200
+
+void DrawNuit(SDL_Renderer* renderer, int width, int height)
+{
+    /* ================= DONNÉES PERSISTANTES ================= */
+
+    static int etoileX[NB_ETOILES];
+    static int etoileY[NB_ETOILES];
+    static int etoileR[NB_ETOILES];
+    static int etoileBlink[NB_ETOILES];
+    static int init = 0;
+
+    /* ================= INITIALISATION ================= */
+
+    if (!init)
+    {
+        for (int i = 0; i < NB_ETOILES; i++)
+        {
+            etoileX[i] = rand() % width;     // position X
+            etoileY[i] = rand() % height;    // position Y
+            etoileR[i] = 1 + rand() % 2;     // taille
+            etoileBlink[i] = rand() % 100;   // scintillement
+        }
+        init = 1;
+    }
+
+    /* ================= FOND DE NUIT ================= */
+
+    SDL_SetRenderDrawColor(renderer, 8, 12, 30, 255); // bleu nuit profond
+    SDL_RenderClear(renderer);
+
+    /* ================= LUNE ================= */
+
+    int moonX = width - 120;
+    int moonY = 100;
+    int moonR = 30;
+
+    // Halo léger
+    SDL_SetRenderDrawColor(renderer, 200, 200, 220, 40);
+    for (int r = moonR + 5; r < moonR + 15; r++)
+    {
+        for (int dx = -r; dx <= r; dx++)
+        {
+            for (int dy = -r; dy <= r; dy++)
+            {
+                if (dx*dx + dy*dy <= r*r)
+                    SDL_RenderPoint(renderer, moonX + dx, moonY + dy);
+            }
+        }
+    }
+
+    // Corps de la lune
+    SDL_SetRenderDrawColor(renderer, 220, 220, 210, 255);
+    for (int dx = -moonR; dx <= moonR; dx++)
+    {
+        for (int dy = -moonR; dy <= moonR; dy++)
+        {
+            if (dx*dx + dy*dy <= moonR*moonR)
+                SDL_RenderPoint(renderer, moonX + dx, moonY + dy);
+        }
+    }
+
+    /* ================= ÉTOILES ================= */
+
+    for (int i = 0; i < NB_ETOILES; i++)
+    {
+        etoileBlink[i] = (etoileBlink[i] + 1) % 120;
+        int lum = 180 + (etoileBlink[i] % 50);
+
+        SDL_SetRenderDrawColor(renderer, lum, lum, lum, 255);
+
+        for (int dx = -etoileR[i]; dx <= etoileR[i]; dx++)
+        {
+            for (int dy = -etoileR[i]; dy <= etoileR[i]; dy++)
+            {
+                if (dx*dx + dy*dy <= etoileR[i]*etoileR[i])
+                    SDL_RenderPoint(renderer,
+                        etoileX[i] + dx,
+                        etoileY[i] + dy);
+            }
+        }
+    }
+}
+
+// dessin de l'etoile fillante la nuit 
+void DrawEtoile(SDL_Renderer* renderer, int screenWidth, int screenHeight) {
+     int count = 3;
+    static struct ShootingStar {
+        float x, y;
+        float speedX, speedY;
+        int length;
+    } stars[100]; // taille maximale
+
+    static bool initialized = false;
+
+    if (!initialized) {
+        srand((unsigned int)time(0));
+        for (int i = 0; i < count; ++i) {
+            stars[i].x = rand() % screenWidth;
+            stars[i].y = rand() % (screenHeight / 2);
+            stars[i].speedX = 5.0f + rand() % 5;
+            stars[i].speedY = 2.0f + rand() % 3;
+            stars[i].length = 10 + rand() % 10;
+        }
+        initialized = true;
+    }
+
+    for (int i = 0; i < count; ++i) {
+        // Dessiner la traînée estompée
+        for (int j = 0; j < stars[i].length; ++j) {
+            int alpha = 255 - (j * (255 / stars[i].length));
+            SDL_SetRenderDrawColor(renderer, 255, 255, 255, alpha);
+            SDL_RenderPoint(renderer,
+                (int)(stars[i].x - j * (stars[i].speedX / stars[i].length)),
+                (int)(stars[i].y - j * (stars[i].speedY / stars[i].length))
+            );
+        }
+
+        // Mettre à jour la position
+        stars[i].x += stars[i].speedX;
+        stars[i].y += stars[i].speedY;
+
+        // Réinitialiser si l'étoile sort de l'écran
+        if (stars[i].x > screenWidth || stars[i].y > screenHeight) {
+            stars[i].x = 0;
+            stars[i].y = rand() % (screenHeight / 2);
+            stars[i].speedX = 4.0f + rand() % 5;
+            stars[i].speedY = 2.0f + rand() % 3;
+            stars[i].length = 10 + rand() % 10;
+        }
     }
 }

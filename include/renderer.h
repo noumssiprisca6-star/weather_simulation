@@ -14,13 +14,17 @@ extern bool showSoleil;
 
 //pour les dessin
 
-void DrawFilledCircle(SDL_Renderer* renderer , int cx , int cy , int radius );
+void drawFilledCircle(SDL_Renderer* renderer , int cx , int cy , int radius );
 void DrawSoleil( SDL_Renderer* renderer);
 void RenderScene(SDL_Renderer* renderer);
+void DrawNuit(SDL_Renderer* renderer, int width, int height);
+void DrawEtoile(SDL_Renderer* renderer, int width, int height);
+void RenderNuage(SDL_Renderer* renderer);
+void DrawNuage(SDL_Renderer* renderer , int x , int y);
 void DrawCloud(SDL_Renderer* renderer ,int x , int y);
 void DrawNeige(SDL_Renderer* renderer , int width , int height);
 void DrawOrage(SDL_Renderer* renderer, int width, int height);
-void DrawPluie(SDL_Renderer* renderer);
+
 
 #endif
 

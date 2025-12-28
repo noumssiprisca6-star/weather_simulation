@@ -12,7 +12,8 @@ enum class Meteo {
     Pluie,
     Nuage,
     Neige,
-    Orage
+    Orage, 
+    nuit
 };
 /**
  * la procedure UpdateMeteo permet de mettre à jour les animation 
