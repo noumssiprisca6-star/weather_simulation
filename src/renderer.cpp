@@ -60,10 +60,16 @@ void drawFilledCircle(SDL_Renderer* renderer, int cx, int cy, int radius)
 
 
 // DESSIN DU SOLEIL
-
+/* 
+*sun(x , y )sont les position du centre 
+*radius est le rayon du soleil c'est a dire du cercle dessiner pour reprenter le soleil
+*dx*dx + dy*dy est l'equation du cercle 
+* numRays est le nombre de rayon 
+* l'angl repartit les rayons uniformement autour du cercle  
+*/
 void DrawSoleil(SDL_Renderer* renderer)
 {
-    SDL_SetRenderDrawColor(renderer, 255, 200, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 255, 200, 0, 255); // xcouleur jaune 
 
     int sunX = 650;
     int sunY = 120;
@@ -84,7 +90,12 @@ void DrawSoleil(SDL_Renderer* renderer)
 
 
 // DESSIN D'UN NUAGE
-
+/*
+*chaque nuage est compose de 3 cercles blancs 
+ * on peut ajuster les decalages pour que les nuages paraisse flutty et realistes 
+ * speed est la vitesse de deplacement horizontal 
+ * quand le nuage se deplace hors de le='ecran , il revient a gauche 
+*/
 void DrawCloud(SDL_Renderer* renderer, int x, int y)
 {
     SDL_SetRenderDrawColor(renderer, 245, 245, 245, 255);
@@ -412,54 +423,119 @@ void DrawNuit(SDL_Renderer* renderer, int width, int height)
                         etoileY[i] + dy);
             }
         }
-    }
+    } 
 }
 
 // dessin de l'etoile fillante la nuit 
-void DrawEtoile(SDL_Renderer* renderer, int screenWidth, int screenHeight) {
-     int count = 3;
-    static struct ShootingStar {
+/*  ici , chaque etoile a un booleen "active " et un respawntime 
+ * chaque etoile designe une ligne blanche qui simule la trainée 
+ * lorsqu'elle sorte de l'ecran , elle deviennent inactive et 
+ * son respawntime est defini pour un temps d'apparition bien specifique 
+ *  la fonction verifie de temps avant de la reactivé 
+*/
+void DrawEtoile (SDL_Renderer* renderer, int screenWidth, int screenHeight) {
+    int count = 3;
+    struct ShootingStar {
         float x, y;
         float speedX, speedY;
         int length;
-    } stars[100]; // taille maximale
-
+        Uint32 respawnTime; // moment où l'étoile peut réapparaître
+        bool active;
+    };
+    static std::vector<ShootingStar> stars;
     static bool initialized = false;
 
     if (!initialized) {
         srand((unsigned int)time(0));
         for (int i = 0; i < count; ++i) {
-            stars[i].x = rand() % screenWidth;
-            stars[i].y = rand() % (screenHeight / 2);
-            stars[i].speedX = 5.0f + rand() % 5;
-            stars[i].speedY = 2.0f + rand() % 3;
-            stars[i].length = 10 + rand() % 10;
+            ShootingStar s;
+            s.x = rand() % screenWidth;
+            s.y = rand() % (screenHeight / 2);
+            s.speedX = 5.0f + rand() % 5;
+            s.speedY = 2.0f + rand() % 3;
+            s.length = 10 + rand() % 10;
+            s.active = true;
+            s.respawnTime = 0;
+            stars.push_back(s);
         }
         initialized = true;
     }
 
-    for (int i = 0; i < count; ++i) {
-        // Dessiner la traînée estompée
-        for (int j = 0; j < stars[i].length; ++j) {
-            int alpha = 255 - (j * (255 / stars[i].length));
-            SDL_SetRenderDrawColor(renderer, 255, 255, 255, alpha);
-            SDL_RenderPoint(renderer,
-                (int)(stars[i].x - j * (stars[i].speedX / stars[i].length)),
-                (int)(stars[i].y - j * (stars[i].speedY / stars[i].length))
-            );
-        }
+    Uint32 currentTime = SDL_GetTicks();
 
-        // Mettre à jour la position
-        stars[i].x += stars[i].speedX;
-        stars[i].y += stars[i].speedY;
+    for (auto& star : stars) {
+        if (star.active) {
+            // Dessiner la traînée estompée
+            for (int i = 0; i < star.length; ++i) {
+                int alpha = 255 - (i * (255 / star.length));
+                SDL_SetRenderDrawColor(renderer, 255, 255, 255, alpha);
+                SDL_RenderPoint(renderer,
+                    (int)(star.x - i * (star.speedX / star.length)),
+                    (int)(star.y - i * (star.speedY / star.length))
+                );
+            }
 
-        // Réinitialiser si l'étoile sort de l'écran
-        if (stars[i].x > screenWidth || stars[i].y > screenHeight) {
-            stars[i].x = 0;
-            stars[i].y = rand() % (screenHeight / 2);
-            stars[i].speedX = 4.0f + rand() % 5;
-            stars[i].speedY = 2.0f + rand() % 3;
-            stars[i].length = 10 + rand() % 10;
+            // Mettre à jour la position
+            star.x += star.speedX;
+            star.y += star.speedY;
+
+            // Si elle sort de l'écran, la désactiver et programmer la réapparition
+            if (star.x > screenWidth || star.y > screenHeight) {
+                star.active = false;
+                star.respawnTime = currentTime + 3000; //  3 secondes plus tard
+            }
+        } else {
+            // Vérifier  si le délai est passé pour réactiver
+            if (currentTime >= star.respawnTime) {
+                star.x = 0;
+                star.y = rand() % (screenHeight / 2);
+                star.speedX = 5.0f + rand() % 5;
+                star.speedY = 2.0f + rand() % 3;
+                star.length = 10 + rand() % 10;
+                star.active = true;
+            }
         }
     }
+}
+
+// fonction pour simuler un tourbillon
+/*ici centerx et centery sont les centre du tourbillon 
+* turns est le nombre de tours de spirales 
+* spcing est la distance entre les spirales 
+* pointsperturn est plus grand , plus la spirale est lisse  
+* la fonction dessine simplement des points le long d'une spirale
+
+*/
+void DrawTour (SDL_Renderer* renderer, int Width, int Height){
+int turns = 5;
+ float spacing = 5.0f ;
+    static float rotation = 0.0f; // rotation du tourbillon
+
+    // Fond gris
+    SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255); // gris moyen
+    SDL_RenderClear(renderer);
+
+    // Couleur du tourbillon (blanc)
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+    const int pointsPerTurn = 100;
+    const float twoPi = 6.28318530718f;
+
+    int centerX = Width / 2;
+    int centerY = Height / 2;
+
+    for (int t = 0; t < turns * pointsPerTurn; ++t) {
+        float angle = (twoPi * t) / pointsPerTurn + rotation;
+        float radius = spacing * angle;
+        int x = centerX + (int)(radius * cos(angle));
+        int y = centerY + (int)(radius * sin(angle));
+        SDL_RenderPoint(renderer, x, y);
+    }
+
+    // Mettre à jour la rotation
+    rotation += 0.02f;
+    if (rotation > twoPi) rotation -= twoPi;
+
+    // Afficher le rendu
+    SDL_RenderPresent(renderer);
 }

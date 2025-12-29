@@ -59,7 +59,8 @@
     bool showorage = false;//dessin de la pluie si vrai
     bool shownuage = false; //dessin des nuages si vrai
     bool shownuit = false ; //dessin de la nuit 
-    bool showetoile = false ; //pour l'etoile fillante 
+    bool showetoile = false ; // dessin l'etoile fillante 
+    bool showtour = false ; // dessin du tourbillon 
     float clear_color[4] = {0.1f, 0.1f, 0.15f, 1.0f};
     float slider_value = 0.5f;
     int counter;
@@ -68,7 +69,7 @@
     
      //variable de la boucle principale
    // creation de la surface
-SDL_Surface* surface = IMG_Load("assets/im.jpg");
+SDL_Surface* surface = IMG_Load("assets/imo.jpg");
 //creation de la texture à partir de la surface 
 SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer , surface);
 //destruction de la surface creer 
@@ -109,6 +110,7 @@ SDL_DestroySurface(surface);
             showorage = false;
             showneige = false;
             showetoile = false ;
+             showtour = false ; 
             //il est important de preciser que l'evenement metheo precedent
             //(selon le choix de l'utilisateur) doit s'arreter avant de lancer
             //le nouvel evenement
@@ -124,6 +126,7 @@ SDL_DestroySurface(surface);
             shownuage=false;
             showneige = false;
             showetoile = false ;
+             showtour = false ; 
         } 
         if (ImGui::Button("Neige")) {
             SetMeteo(Meteo::Neige);// pour la neige
@@ -132,6 +135,7 @@ SDL_DestroySurface(surface);
             shownuage=false;
             showorage = false;
             showetoile = false ;
+            showtour = false ; 
           
         }
         if (ImGui::Button("nuit")){
@@ -142,9 +146,20 @@ SDL_DestroySurface(surface);
             showneige = false ;
             shownuage  = false;
             showorage = false ;
+            showtour = false ; 
         
         }
-  
+        if ( ImGui::Button("tourbillon")){
+            SetMeteo(Meteo::tourbillon);
+            showtour = true  ; 
+            shownuit = false ;
+            showetoile = false ;
+            showsoleil = false ;
+            showneige = false ;
+            shownuage  = false;
+            showorage = false ;
+           
+        }
     
         ImGui::Separator();
         ImGui::End();
@@ -186,6 +201,10 @@ SDL_DestroySurface(surface);
             DrawNuit(renderer , 800 ,600);
             DrawEtoile(renderer , 800 , 600);
         }
+        if(showtour){
+            DrawTour(renderer , 800 ,600);
+        }
+
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
         
         

@@ -9,19 +9,19 @@ extern SDL_Renderer* renderer;
 
 enum class Meteo {
     Soleil,
-    Pluie,
+    tourbillon,
+    Pluie ,
     Nuage,
     Neige,
     Orage, 
     nuit
 };
-/**
- * la procedure UpdateMeteo permet de mettre à jour les animation 
+/*
  * DrawMeteo permet de dessiner la meteo
  * SetMeteo permet de changer la meteo
  */
-void UpdateMeteo(float deltaTime); 
+
 void DrawMeteo(SDL_Renderer* renderer);
 void SetMeteo(Meteo type);
-void DrawUI(Meteo& meteo);
+
 #endif
