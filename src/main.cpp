@@ -60,7 +60,7 @@
     bool shownuage = false; //dessin des nuages si vrai
     bool shownuit = false ; //dessin de la nuit 
     bool showetoile = false ; // dessin l'etoile fillante 
-    bool showtour = false ; // dessin du tourbillon 
+    bool showbrou = false ; // dessin du tourbillon 
     float clear_color[4] = {0.1f, 0.1f, 0.15f, 1.0f};
     float slider_value = 0.5f;
     int counter;
@@ -110,7 +110,7 @@ SDL_DestroySurface(surface);
             showorage = false;
             showneige = false;
             showetoile = false ;
-             showtour = false ; 
+             showbrou = false ; 
             //il est important de preciser que l'evenement metheo precedent
             //(selon le choix de l'utilisateur) doit s'arreter avant de lancer
             //le nouvel evenement
@@ -126,7 +126,7 @@ SDL_DestroySurface(surface);
             shownuage=false;
             showneige = false;
             showetoile = false ;
-             showtour = false ; 
+             showbrou = false ; 
         } 
         if (ImGui::Button("Neige")) {
             SetMeteo(Meteo::Neige);// pour la neige
@@ -135,7 +135,7 @@ SDL_DestroySurface(surface);
             shownuage=false;
             showorage = false;
             showetoile = false ;
-            showtour = false ; 
+            showbrou = false ; 
           
         }
         if (ImGui::Button("nuit")){
@@ -146,12 +146,12 @@ SDL_DestroySurface(surface);
             showneige = false ;
             shownuage  = false;
             showorage = false ;
-            showtour = false ; 
+            showbrou = false ; 
         
         }
-        if ( ImGui::Button("tourbillon")){
-            SetMeteo(Meteo::tourbillon);
-            showtour = true  ; 
+        if ( ImGui::Button("brume")){
+            SetMeteo(Meteo::brume);
+            showbrou = true  ; 
             shownuit = false ;
             showetoile = false ;
             showsoleil = false ;
@@ -201,10 +201,9 @@ SDL_DestroySurface(surface);
             DrawNuit(renderer , 800 ,600);
             DrawEtoile(renderer , 800 , 600);
         }
-        if(showtour){
-            DrawTour(renderer , 800 ,600);
-        }
-
+       if(showbrou){
+        DrawBrume(renderer ,800 ,600 );
+       }
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
         
         

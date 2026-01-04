@@ -14,7 +14,8 @@ enum class Meteo {
     Nuage,
     Neige,
     Orage, 
-    nuit
+    nuit ,
+    brume
 };
 /*
  * DrawMeteo permet de dessiner la meteo

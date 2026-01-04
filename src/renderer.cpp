@@ -1,6 +1,7 @@
 #include "../include/renderer.h"
 #include <stb_image.h>
 #include <cmath>
+#include <ctime>
 #include <cstdlib>
 #include<vector>
 #include"../src/SDL3/SDL3_image/SDL_image.h"
@@ -24,7 +25,12 @@ struct Cloud {
     float speed;
 };
 
-
+//structure pour la brume 
+struct BrumeParticule {
+    float x, y;      // position
+    float alpha;     // opacité
+    float speedY;    // vitesse verticale
+};
 
 Cloud clouds[6] = {
     { -150.0f, 100, 0.5f },
@@ -125,9 +131,6 @@ void RenderScene(SDL_Renderer* renderer){
 
 }
     
-
-
-   
 
  
 #define NB_PLUIE 400   // Nombre de gouttes de pluie
@@ -498,44 +501,22 @@ void DrawEtoile (SDL_Renderer* renderer, int screenWidth, int screenHeight) {
     }
 }
 
-// fonction pour simuler un tourbillon
-/*ici centerx et centery sont les centre du tourbillon 
-* turns est le nombre de tours de spirales 
-* spcing est la distance entre les spirales 
-* pointsperturn est plus grand , plus la spirale est lisse  
-* la fonction dessine simplement des points le long d'une spirale
 
+
+
+
+ 
+
+
+ 
+/*Particules de brume 
+*représentées par de petits rectangles semi-transparents qui flottent doucement.
+*Couleur de fond  violet foncé (25, 0, 40) pour l’ambiance mystérieuse.
+*Animation  chaque particule descend lentement et revient en haut lorsqu’elle sort de l’écran.
+*SDL_RenderPresent  met à jour l’écran à chaque boucle.
 */
-void DrawTour (SDL_Renderer* renderer, int Width, int Height){
-int turns = 5;
- float spacing = 5.0f ;
-    static float rotation = 0.0f; // rotation du tourbillon
 
-    // Fond gris
-    SDL_SetRenderDrawColor(renderer, 128, 128, 128, 255); // gris moyen
-    SDL_RenderClear(renderer);
+// Fonction pour dessiner la brume mystère
+void DrawBrume(SDL_Renderer* renderer, int width, int heigth) {
 
-    // Couleur du tourbillon (blanc)
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-
-    const int pointsPerTurn = 100;
-    const float twoPi = 6.28318530718f;
-
-    int centerX = Width / 2;
-    int centerY = Height / 2;
-
-    for (int t = 0; t < turns * pointsPerTurn; ++t) {
-        float angle = (twoPi * t) / pointsPerTurn + rotation;
-        float radius = spacing * angle;
-        int x = centerX + (int)(radius * cos(angle));
-        int y = centerY + (int)(radius * sin(angle));
-        SDL_RenderPoint(renderer, x, y);
-    }
-
-    // Mettre à jour la rotation
-    rotation += 0.02f;
-    if (rotation > twoPi) rotation -= twoPi;
-
-    // Afficher le rendu
-    SDL_RenderPresent(renderer);
 }
