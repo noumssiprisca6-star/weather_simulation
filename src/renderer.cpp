@@ -1,14 +1,13 @@
 #include "../include/renderer.h"
-#include <stb_image.h>
+#include "../libs/stb/stb_image.h"
 #include <cmath>
 #include <ctime>
 #include <cstdlib>
-#include<vector>
+#include <vector>
 #include"../src/SDL3/SDL3_image/SDL_image.h"
-
 #include <SDL3/SDL.h>
+#define _USE_MATH_DEFINES
 #include <cmath>
-
 
 
 //elelment
@@ -25,11 +24,10 @@ struct Cloud {
     float speed;
 };
 
-//structure pour la brume 
-struct BrumeParticule {
-    float x, y;      // position
-    float alpha;     // opacité
-    float speedY;    // vitesse verticale
+struct BrumePixel {
+    float x, y;       // position
+    float vx, vy;     // vitesse
+    Uint8 alpha;      // transparence
 };
 
 Cloud clouds[6] = {
@@ -517,6 +515,10 @@ void DrawEtoile (SDL_Renderer* renderer, int screenWidth, int screenHeight) {
 */
 
 // Fonction pour dessiner la brume mystère
-void DrawBrume(SDL_Renderer* renderer, int width, int heigth) {
 
+
+
+// Fonction qui met à jour et dessine la brume
+void DrawBrume(SDL_Renderer* renderer, int width, int height) {
+    
 }

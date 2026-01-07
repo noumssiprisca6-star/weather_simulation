@@ -9,9 +9,9 @@
 // main.cpp
 #define STB_IMAGE_IMPLEMENTATION
 #include "../libs/stb/stb_image.h"
-#include <imgui.h>
-#include <imgui_impl_sdl3.h>
-#include <imgui_impl_sdlrenderer3.h>
+#include "../libs/imgui/imgui.h"
+#include "../libs/imgui/backends/imgui_impl_sdl3.h"
+#include "../libs/imgui/backends/imgui_impl_sdlrenderer3.h"
 #include <windows.h>
 #include<cstdlib>
 
@@ -50,7 +50,29 @@
     ImGui::StyleColorsDark();
     ImGui_ImplSDL3_InitForSDLRenderer(window, renderer);
     ImGui_ImplSDLRenderer3_Init(renderer);
+// Setup du style ImGui
+ImGuiStyle& style = ImGui::GetStyle();
+style.WindowRounding = 8.0f;      
+style.FrameRounding = 6.0f;       
+style.FramePadding = ImVec2(10, 5); 
 
+ImVec4* colors = style.Colors;
+
+// Fond sombre pour faire ressortir l'or
+colors[ImGuiCol_WindowBg]       = ImVec4(0.05f, 0.02f, 0.1f, 1.0f); // violet foncé / presque noir
+
+// Boutons couleur or
+colors[ImGuiCol_Button]         = ImVec4(0.9f, 0.75f, 0.2f, 1.0f);   // doré normal
+colors[ImGuiCol_ButtonHovered]  = ImVec4(1.0f, 0.85f, 0.3f, 1.0f);   // doré clair au survol
+colors[ImGuiCol_ButtonActive]   = ImVec4(0.8f, 0.65f, 0.1f, 1.0f);   // doré foncé quand pressé
+
+// Texte
+colors[ImGuiCol_Text]           = ImVec4(1.0f, 1.0f, 0.9f, 1.0f);    // texte blanc légèrement chaud
+
+// Headers (pour onglets/collapses)
+colors[ImGuiCol_Header]         = ImVec4(0.9f, 0.75f, 0.2f, 1.0f);
+colors[ImGuiCol_HeaderHovered]  = ImVec4(1.0f, 0.85f, 0.3f, 1.0f);
+colors[ImGuiCol_HeaderActive]   = ImVec4(0.8f, 0.65f, 0.1f, 1.0f);
 // etat de la meteo 
     bool show_demo_window = false; //pas besoin de la fenetre de demo dans le projet final
     bool show_custom_window = true;
@@ -61,7 +83,7 @@
     bool shownuit = false ; //dessin de la nuit 
     bool showetoile = false ; // dessin l'etoile fillante 
     bool showbrou = false ; // dessin du tourbillon 
-    float clear_color[4] = {0.1f, 0.1f, 0.15f, 1.0f};
+    float clear_color[4] = {0.8f, 0.85f, 0.3f, 1.0f};
     float slider_value = 0.5f;
     int counter;
     char text_buffer[256] = " hello";
@@ -201,9 +223,7 @@ SDL_DestroySurface(surface);
             DrawNuit(renderer , 800 ,600);
             DrawEtoile(renderer , 800 , 600);
         }
-       if(showbrou){
-        DrawBrume(renderer ,800 ,600 );
-       }
+       
         ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), renderer);
         
         

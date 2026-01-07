@@ -1,5 +1,5 @@
-#include "../libs/SDL3/SDL.h"
-#include "../libs/SDL3/SDL_main.h"
+#include "../src/SDL3/SDL.h"
+#include "../src/SDL3/SDL_main.h"
 
 //structure pour stocker l'etat de l'application
 struct AppState {

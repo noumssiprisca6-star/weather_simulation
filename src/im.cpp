@@ -1,4 +1,4 @@
-#include"../libs/SDL3/SDL3_image/SDL_image.h"
+#include"../src/SDL3/SDL3_image/SDL_image.h"
 #include <SDL.h>
 #include <iostream>
 

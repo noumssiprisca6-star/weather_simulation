@@ -1,6 +1,10 @@
 #pragma once
 #ifndef RENDERER_H
 #define RENDERER_H
+#ifndef M_PI
+#define M_Po 3.14159265358979323846
+#endif
+
 
 #include <SDL3/SDL.h>
 #include "../include/meteo.h"
@@ -19,7 +23,6 @@ void DrawSoleil( SDL_Renderer* renderer);
 void RenderScene(SDL_Renderer* renderer);
 void DrawNuit(SDL_Renderer* renderer, int width, int height);
 void DrawEtoile(SDL_Renderer* renderer, int width, int height);
-void DrawBrume(SDL_Renderer* renderer, int width , int height);
 void RenderNuage(SDL_Renderer* renderer);
 void DrawNuage(SDL_Renderer* renderer , int x , int y);
 void DrawCloud(SDL_Renderer* renderer ,int x , int y);
