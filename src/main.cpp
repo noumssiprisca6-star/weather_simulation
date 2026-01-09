@@ -201,7 +201,7 @@ SDL_DestroySurface(surface);
             DrawNeige(renderer ,800 ,600);
         }
         //on dessine le soleil. il ne disparaitra pas tant que le bouton ne renvoie pas
-        //showsoleil a false.
+         //showsoleil a false.
         if(showsoleil){
             
             SDL_SetRenderDrawColor (renderer ,135, 206, 235, 255);
