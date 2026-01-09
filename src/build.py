@@ -19,9 +19,9 @@ import platform
 
 
 # CONFIGuration  GÉNÉRALE
-# -wall  -wextra ffiche beaucoup d'avertissement utiles
+# -wall  -wextra affiche beaucoup d'avertissement utiles
 #-std=c++17 est un standard C++17 c'est une bonne pratique 
-#les dossiers ignores npendant la recherche des fichiers .cpp sont des Exclude  
+#les dossiers ignores pendant la recherche des fichiers .cpp sont des Exclude  
 #c'est important pour eviter les erreurs et compiler inutilement
 
 
@@ -60,13 +60,13 @@ if len(sys.argv) > 1:
 
 if mode == "debug":
     #-g mode de debogage  
-    # 00 aucune optimisation 
+    # -00 aucune optimisation 
     FLAGS = ["-g", "-O0"]
 elif mode == "release":
     # mode release 
     FLAGS = ["-O2"]
-    # flags permets l'obtimisation du code 
-    #programme plus rapide 
+    # flags permets l'optimisation du code 
+    # programme plus rapide 
 
     # MODE CLEAN
 
